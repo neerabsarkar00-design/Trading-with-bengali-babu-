@@ -1,0 +1,394 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated trader or admin user profile with role, account status, and risk management targets.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID matching the document ID."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Verified Google account email."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["ADMIN", "STUDENT"],
+          "description": "Access control role."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ACTIVE", "SUSPENDED"],
+          "description": "Account status controlled by Admin."
+        },
+        "tradingCapital": {
+          "type": "number",
+          "description": "Account capital used for risk percentage calculations."
+        },
+        "dailyGoal": {
+          "type": "number",
+          "description": "Daily profit target."
+        },
+        "dailyMaxLoss": {
+          "type": "number",
+          "description": "Daily maximum loss limit."
+        },
+        "maxTradesPerDay": {
+          "type": "integer",
+          "description": "Maximum trades allowed per day before overtrading alert triggers."
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "Optional Google profile photo URL."
+        },
+        "adminNotes": {
+          "type": "string",
+          "description": "Optional mentor/admin notes about the student."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "name",
+        "email",
+        "role",
+        "status",
+        "tradingCapital",
+        "dailyGoal",
+        "dailyMaxLoss",
+        "maxTradesPerDay",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StudentInvite": {
+      "title": "StudentInvite",
+      "description": "Admin-managed student invitation or pre-registered student profile keyed by Admin.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Student email address (lowercase)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Student full name."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["INVITED", "ACTIVE", "SUSPENDED"],
+          "description": "Invite or pre-registration status."
+        },
+        "tradingCapital": {
+          "type": "number",
+          "description": "Assigned starting trading capital."
+        },
+        "dailyGoal": {
+          "type": "number",
+          "description": "Assigned daily profit goal."
+        },
+        "dailyMaxLoss": {
+          "type": "number",
+          "description": "Assigned daily max loss limit."
+        },
+        "maxTradesPerDay": {
+          "type": "integer",
+          "description": "Assigned max trades per day."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional mentor notes."
+        },
+        "createdByUid": {
+          "type": "string",
+          "description": "Admin UID who created the invite."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "email",
+        "name",
+        "status",
+        "tradingCapital",
+        "dailyGoal",
+        "dailyMaxLoss",
+        "maxTradesPerDay",
+        "createdByUid",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "TradeEntry": {
+      "title": "TradeEntry",
+      "description": "Complete trading journal record owned by an authenticated user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID."
+        },
+        "tradeCode": {
+          "type": "string",
+          "description": "Automatic readable Trade ID (e.g. TBB-20261123-001)."
+        },
+        "userName": {
+          "type": "string",
+          "description": "Trader display name."
+        },
+        "tradeDate": {
+          "type": "string",
+          "description": "ISO date YYYY-MM-DD."
+        },
+        "tradeTimestampMillis": {
+          "type": "integer",
+          "description": "Trade date/time in epoch milliseconds."
+        },
+        "instrument": {
+          "type": "string",
+          "description": "Trading instrument symbol."
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["BUY", "SELL"],
+          "description": "Trade direction."
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": ["M1", "M5", "M15", "M30", "H1", "H4", "D1"],
+          "description": "Chart timeframe."
+        },
+        "entryPrice": {
+          "type": "number",
+          "description": "Entry price."
+        },
+        "exitPrice": {
+          "type": "number",
+          "description": "Exit price."
+        },
+        "stopLoss": {
+          "type": "number",
+          "description": "Stop loss price."
+        },
+        "takeProfit": {
+          "type": "number",
+          "description": "Take profit price."
+        },
+        "lotSize": {
+          "type": "number",
+          "description": "Position lot or quantity size."
+        },
+        "riskAmount": {
+          "type": "number",
+          "description": "Monetary risk amount."
+        },
+        "profitLoss": {
+          "type": "number",
+          "description": "Actual realized profit or loss."
+        },
+        "result": {
+          "type": "string",
+          "enum": ["WIN", "LOSS", "BREAK_EVEN"],
+          "description": "Outcome classification."
+        },
+        "riskRewardRatio": {
+          "type": "number",
+          "description": "Calculated risk-to-reward ratio."
+        },
+        "stopLossUsed": {
+          "type": "boolean",
+          "description": "Whether a valid stop loss was used."
+        },
+        "strategy": {
+          "type": "string",
+          "description": "Trading strategy name."
+        },
+        "entryReason": {
+          "type": "string",
+          "description": "Reason for entering the trade."
+        },
+        "exitReason": {
+          "type": "string",
+          "description": "Reason for exiting the trade."
+        },
+        "mistakes": {
+          "type": "string",
+          "description": "Mistakes made during execution."
+        },
+        "lessonsLearned": {
+          "type": "string",
+          "description": "Lessons learned from the trade."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional trade notes."
+        },
+        "chartScreenshotBase64": {
+          "type": "string",
+          "description": "Optional compressed Base64 chart screenshot."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "tradeCode",
+        "userName",
+        "tradeDate",
+        "tradeTimestampMillis",
+        "instrument",
+        "direction",
+        "timeframe",
+        "entryPrice",
+        "exitPrice",
+        "stopLoss",
+        "takeProfit",
+        "lotSize",
+        "riskAmount",
+        "profitLoss",
+        "result",
+        "riskRewardRatio",
+        "stopLossUsed",
+        "strategy",
+        "entryReason",
+        "exitReason",
+        "mistakes",
+        "lessonsLearned",
+        "notes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DisciplineEntry": {
+      "title": "DisciplineEntry",
+      "description": "Trading psychology note, daily adherence log, or weekly/monthly review.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID."
+        },
+        "userName": {
+          "type": "string",
+          "description": "Trader display name."
+        },
+        "entryType": {
+          "type": "string",
+          "enum": ["DAILY_PSYCHOLOGY", "WEEKLY_REVIEW", "MONTHLY_REVIEW"],
+          "description": "Type of discipline or review entry."
+        },
+        "periodLabel": {
+          "type": "string",
+          "description": "Date, week, or month label."
+        },
+        "moodTag": {
+          "type": "string",
+          "description": "Emotional state tag."
+        },
+        "followedRules": {
+          "type": "boolean",
+          "description": "Whether trading plan rules were followed."
+        },
+        "respectedStopLoss": {
+          "type": "boolean",
+          "description": "Whether stop losses were respected."
+        },
+        "overtraded": {
+          "type": "boolean",
+          "description": "Whether overtrading occurred."
+        },
+        "psychologyNotes": {
+          "type": "string",
+          "description": "Psychology and mindset observations."
+        },
+        "mistakesSummary": {
+          "type": "string",
+          "description": "Summary of mistakes for the period."
+        },
+        "improvementsPlan": {
+          "type": "string",
+          "description": "Actionable improvement plan."
+        },
+        "disciplineScore": {
+          "type": "integer",
+          "description": "Self-rated discipline score from 1 to 10."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "userName",
+        "entryType",
+        "periodLabel",
+        "moodTag",
+        "followedRules",
+        "respectedStopLoss",
+        "overtraded",
+        "psychologyNotes",
+        "mistakesSummary",
+        "improvementsPlan",
+        "disciplineScore",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Trader and Admin profile documents."
+    },
+    "/student_invites/{inviteId}": {
+      "schema": { "$ref": "#/entities/StudentInvite" },
+      "description": "Admin-managed student invitations and pre-configured account limits."
+    },
+    "/trades/{tradeId}": {
+      "schema": { "$ref": "#/entities/TradeEntry" },
+      "description": "Trading journal records isolated per student and readable by Admin."
+    },
+    "/discipline_entries/{entryId}": {
+      "schema": { "$ref": "#/entities/DisciplineEntry" },
+      "description": "Psychology notes, mistake reviews, and weekly/monthly discipline logs."
+    }
+  }
+}
